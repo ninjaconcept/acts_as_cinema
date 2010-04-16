@@ -75,30 +75,24 @@ You may also set the options in the view like so:
 
 h3. Sample configuration
 
-See a live sample for the configuration:
+See acts_as_cinema in a working example at "acts_as_cinema_example":https://github.com/ninjaconcept/acts_as_cinema_example
+
+h4. simplest configuration:
+
 <pre><code>
   class Video < ActiveRecord::Base
-    acts_as_cinema :height => 400, :width => 600, :allow_full_screen => false,
-       # You can use a method
-       :tag_template => :aac_tag
-       # Or directly assign a string to the :tag_template option
-       #
-       # :tag_template => %{
-       #   <object width="<%= width %>" height="<%= height %>">
-       #     <param name="movie" value="<%= video_url %>"></param>
-       #     <param name="allowFullScreen" value="<%= allow_full_screen %>"></param>
-       #     <param name="bgcolor" value="#ffffff"></param>
-       #     <param name="allowscriptaccess" value="always"></param>
-       #     <embed src="<%= video_url %>" type="application/x-shockwave-flash" allowscriptaccess="always" 
-       #       allowfullscreen="<%= allow_full_screen %>" width="<%= width %>" height="<%= height %>" wmode="transparent">
-       #     </embed>
-       #   </object>
-       # }
-  
-    # your code here
+    acts_as_cinema 
+  end
+</code></pre>
+
+h4. Configuration with custom tag
+
+<pre><code>
+  class Video < ActiveRecord::Base
+    acts_as_cinema :height => 400, :width => 600, :allow_full_screen => false, :tag_template => :aac_tag
+       
   
     private
-      # You can customize the tag here
       def aac_tag
         %{
           <object width="<%= width %>" height="<%= height %>">
