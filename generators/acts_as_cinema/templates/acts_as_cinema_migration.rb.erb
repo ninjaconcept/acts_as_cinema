@@ -1,0 +1,11 @@
+class <%= migration_name %> < ActiveRecord::Migration
+  def self.up
+    add_column :<%= class_name.underscore.camelize.tableize %>, :<%= ActiveRecord::Acts::Cinema::ORIGINAL_INPUT %>, :text
+    add_column :<%= class_name.underscore.camelize.tableize %>, :<%= ActiveRecord::Acts::Cinema::SOURCE_PARAM %>, :string
+  end
+
+  def self.down
+    remove_column :<%= class_name.underscore.camelize.tableize %>, :<%= ActiveRecord::Acts::Cinema::ORIGINAL_INPUT %>
+    remove_column :<%= class_name.underscore.camelize.tableize %>, :<%= ActiveRecord::Acts::Cinema::SOURCE_PARAM %>
+  end
+end

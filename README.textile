@@ -1,0 +1,131 @@
+h1. ActsAsCinema
+
+ActsAsCinema adds the ability to store and display video from youtube.com, vimeo.com and myvideo.de by pasting the video's url or the complete embed-tag. It parses out the required video information and stores the value in the database. One can display the video in a custom embed-tag defineable in the plugin.
+
+
+h2. Installation
+
+To install as a plugin:
+<pre>
+script/plugin install git://github.com/ninjaconcept/acts_as_cinema.git
+</pre>
+
+After acts_as_cinema is installed, you will need to generate the migration.
+<pre>
+script/plugin generate acts_as_cinema video
+</pre>
+
+Here model_name is the model you want to add video support to. It'll generate 
+the necessary migration for you. Here Video is the model:
+<pre>
+class AddOriginalInputAndSourceParamToVideo < ActiveRecord::Migration
+  def self.up
+    add_column :videos, :original_input, :text
+    add_column :videos, :source_param, :string
+  end
+
+  def self.down
+    remove_column :videos, :source_param
+    remove_column :videos, :original_input
+  end
+end
+</pre>
+
+
+h2. Usage
+
+h3. Model
+
+By adding the acts_as_cinema method to your model you'll be able to accept, parse and display videos.
+<pre>
+acts_as_cinema
+</pre>
+
+h3. View
+
+Add a textarea for the original input to your form. This will be stored in the database for backup reasons (let's say something changes in the future and you have to regenerate the video params).
+<pre>
+  <%= f.text_area :original_input %>
+</pre>
+
+Use the video_tag method to display the video in the view:
+<pre>
+  <%= @video.video_tag %>
+</pre>
+
+h2. Configuration
+
+h3. Configuration options
+
+# width: define the width of the video, default is 640
+# height: define the height of the video, default is 385
+# allow_full_screen: define if the video can be viewed fullscreen, default is true
+# tag_template: you can either pass a template string (see the sample in next section),
+  or a template method
+
+
+h3. Configuration from video to video
+
+You may also set the options in the view like so:
+<pre>
+  <%= @video.video_tag(:width => 800, :height => 600) %>
+</pre>
+
+
+h3. Sample configuration
+
+See a live sample for the configuration:
+<pre>
+class Video < ActiveRecord::Base
+  acts_as_cinema :height => 400, :width => 600, :allow_full_screen => false,
+                 # You can use a method
+                 :tag_template => :aac_tag
+                 # Or directly assign a string to the :tag_template option
+                 #
+                 # :tag_template => %{
+                 #   <object width="<%= width %>" height="<%= height %>">
+                 #     <param name="movie" value="<%= video_url %>"></param>
+                 #     <param name="allowFullScreen" value="<%= allow_full_screen %>"></param>
+                 #     <param name="bgcolor" value="#ffffff"></param>
+                 #     <param name="allowscriptaccess" value="always"></param>
+                 #     <embed src="<%= video_url %>" type="application/x-shockwave-flash" allowscriptaccess="always" 
+                 #       allowfullscreen="<%= allow_full_screen %>" width="<%= width %>" height="<%= height %>" wmode="transparent">
+                 #     </embed>
+                 #   </object>
+                 # }
+                 
+  
+  
+  
+  private  
+    # You can customize the tag here
+    def aac_tag
+      %{
+        <object width="<%= width %>" height="<%= height %>">
+          <param name="movie" value="<%= video_url %>"></param>
+          <param name="allowFullScreen" value="<%= allow_full_screen %>"></param>
+          <param name="bgcolor" value="#ffffff"></param>
+          <param name="allowscriptaccess" value="always"></param>
+          <embed src="<%= video_url %>" type="application/x-shockwave-flash" allowscriptaccess="always" 
+            allowfullscreen="<%= allow_full_screen %>" width="<%= width %>" height="<%= height %>" wmode="transparent">
+          </embed>
+        </object>
+      }
+    end
+  
+end
+</pre>
+
+
+h2. Special Thanks
+
+This plugin was inspired by Dejan Simic's "auto_html":http://github.com/dejan/auto_html
+
+
+h2. Contribution
+
+Author: "Stefan Botzenhart":http://github.com/basiszwo
+
+Contributor: "Leon Du":http://github.com/leondu
+
+Feel free to fork and improve this plugin. Just send us a pull request.

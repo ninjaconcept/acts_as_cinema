@@ -1,0 +1,8 @@
+Usage:
+
+  script/generate acts_as_cinema Class
+
+Example:
+  script/generate acts_as_cinema profile
+
+This will create a migration that will add the proper columns to your class's table.
