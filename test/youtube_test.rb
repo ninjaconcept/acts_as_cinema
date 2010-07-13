@@ -53,5 +53,13 @@ class YoutoubeTest < Test::Unit::TestCase
     assert_not_equal 0, v.errors.size
     assert_equal "no valid url", v.errors.on(:original_input)
   end
+  def test_ajax_style_url
+    Video.create(:title => "youtube ajax url",
+                 :original_input => "http://www.youtube.com/user/Longjeur#p/a/u/2/6LrF3ixb8_4")
+    v = Video.find_by_title("youtube ajax url")
+
+    assert_equal "http://www.youtube.com/user/Longjeur#p/a/u/2/6LrF3ixb8_4", v.original_input
+    assert_equal "http://www.youtube.com/v/6LrF3ixb8_4&fs=1", v.source_param
+  end
   
 end

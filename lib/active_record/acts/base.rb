@@ -3,17 +3,17 @@ module ActiveRecord
     module Cinema #:nodoc:
       module VideoSiteParser
         class BaseParser
-          attr_accessor :url_pattern, :embed_pattern, :embed_indicator, :url_template, :validation_url
-          
-          def prepare_pattern(input)
-            input.include?(@embed_indicator)? @embed_pattern : @url_pattern
-          end
-          
+          attr_accessor :url_patterns, :url_template, :validation_url
+
           def parse(input)
-            input.gsub(prepare_pattern(input)) do
-              video_id = $2
-              return ERB.new(@url_template).result(binding) if url_valid?(video_id)
+            @url_patterns.each do |pattern|
+              input.scan(pattern)
+              if $2 && !$2.blank?
+                video_id = $2
+                return ERB.new(@url_template).result(binding) if url_valid?(video_id)
+              end
             end
+
             return ""
           end
           
