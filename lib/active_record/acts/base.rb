@@ -5,12 +5,12 @@ module ActiveRecord
         class BaseParser
           attr_accessor :url_patterns, :url_template, :validation_url
 
-          def parse(input)
+          def parse(input, validate_url=true)
             @url_patterns.each do |pattern|
               input.scan(pattern)
               if $2 && !$2.blank?
                 video_id = $2
-                return ERB.new(@url_template).result(binding) if url_valid?(video_id)
+                return ERB.new(@url_template).result(binding) if validate_url && url_valid?(video_id)
               end
             end
 

@@ -73,7 +73,7 @@ module ActiveRecord
       module InstanceMethods
 
         # Generate the +source_param+ content based on the +orignal_input+
-        def generate_source_param
+        def generate_source_param(validate_url = true)
           video_url = ""
           original_input = read_attribute(ActiveRecord::Acts::Cinema::ORIGINAL_INPUT)
 
@@ -83,7 +83,8 @@ module ActiveRecord
 
           ActiveRecord::Acts::Cinema::SITES.each do |k, v|
             if original_input.include?(v)
-              video_url = "ActiveRecord::Acts::Cinema::VideoSiteParser::#{k.capitalize}Parser".constantize.new.parse(original_input)
+              parser = "ActiveRecord::Acts::Cinema::VideoSiteParser::#{k.capitalize}Parser".constantize.new
+              video_url = parser.parse(original_input, validate_url)
             end
           end
 
