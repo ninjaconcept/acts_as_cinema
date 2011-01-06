@@ -19,7 +19,7 @@ class ActsAsCinemaGenerator < Rails::Generator::NamedBase
   private 
   
   def generate_file_name
-    "add_acts_as_cinema_to_#{@class_name.underscore}"
+    "add_acts_as_cinema_to_#{@class_name.tableize}"
   end
  
 end
